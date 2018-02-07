@@ -1,0 +1,240 @@
+﻿<%@page import="com.kmyj.shopping.entity.TwoHand"%>
+<%@page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<jsp:useBean id="pageinfo" class="com.kmyj.shopping.util.MyPagination"
+	scope="session"></jsp:useBean>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<script language="javascript" src='/twoHands/js/ajax.js'></script>
+<script language="javascript"> 
+function update(id){ 
+pop('CoreServlet?ac=twotoxg&id='+id,'信息修改',550,394) ;
+}
+</script>
+<script language="javascript"> 
+function add(){ 
+pop('CoreServlet?ac=twototj','信息添加',550,394) ;
+}
+</script>
+<style type="text/css">
+<!--
+.mytab {
+	font-size: 12px;
+	width: 100%;
+	line-height: 150%;
+	text-decoration: none;
+	word-wrap: break-word;
+	border: #DBE6E3 solid 1px;
+	border-bottom: 0;
+	border-right: 0;
+	border-left: #DBE6E3 solid 1px;
+	line-height: 175%;
+	margin: 1px 1px;
+	margin-left: 0px;
+}
+
+.mytab td {
+	padding: 2px 5px;
+	border: #DBE6E3 solid 1px;
+	border-left: 0;
+	border-top: 0;
+}
+
+body {
+	margin-left: 3px;
+	margin-top: 0px;
+	margin-right: 3px;
+	margin-bottom: 0px;
+}
+
+.STYLE1 {
+	color: #e1e2e3;
+	font-size: 12px;
+}
+
+.STYLE6 {
+	color: #000000;
+	font-size: 12;
+}
+
+.STYLE10 {
+	color: #000000;
+	font-size: 12px;
+}
+
+.STYLE19 {
+	color: #344b50;
+	font-size: 12px;
+}
+
+.STYLE21 {
+	font-size: 12px;
+	color: #3b6375;
+}
+
+.STYLE22 {
+	font-size: 12px;
+	color: #295568;
+}
+-->
+</style>
+<script language="javascript" src="/twoHands/js/popup.js"></script>
+<script>
+var  highlightcolor='#d5f4fe';
+//此处clickcolor只能用win系统颜色代码才能成功,如果用#xxxxxx的代码就不行,还没搞清楚为什么:(
+var  clickcolor='#51b2f6';
+function  changeto(){
+source=event.srcElement;
+if  (source.tagName=="TR"||source.tagName=="TABLE")
+return;
+while(source.tagName!="TD")
+source=source.parentElement;
+source=source.parentElement;
+cs  =  source.children;
+//alert(cs.length);
+if  (cs[0].style.backgroundColor!=highlightcolor&&source.id!="nc"&&cs[0].style.backgroundColor!=clickcolor)
+for(i=0;i<cs.length;i++){
+	cs[i].style.backgroundColor=highlightcolor;
+}
+}
+
+function  changeback(){
+if  (event.fromElement.contains(event.toElement)||source.contains(event.toElement)||source.id=="nc")
+return
+if  (event.toElement!=source&&cs[0].style.backgroundColor!=clickcolor)
+//source.style.backgroundColor=originalcolor
+for(i=0;i<cs.length;i++){
+	cs[i].style.backgroundColor="";
+}
+}
+
+function  clickto(){
+source=event.srcElement;
+if  (source.tagName=="TR"||source.tagName=="TABLE")
+return;
+while(source.tagName!="TD")
+source=source.parentElement;
+source=source.parentElement;
+cs  =  source.children;
+//alert(cs.length);
+if  (cs[0].style.backgroundColor!=clickcolor&&source.id!="nc")
+for(i=0;i<cs.length;i++){
+	cs[i].style.backgroundColor=clickcolor;
+}
+else
+for(i=0;i<cs.length;i++){
+	cs[i].style.backgroundColor="";
+}
+}
+</script>
+</head>
+<body>
+	<%
+String str=(String)request.getParameter("Page");
+int Page=1;
+List list=null;
+if(str==null){
+	list=(List)request.getAttribute("list");
+	int pagesize=5;      //指定每页显示的记录数
+	list=pageinfo.getInitPage(list,Page,pagesize);     //初始化分页信息
+}else{
+	Page=pageinfo.getPage(str);
+	list=pageinfo.getAppointPage(Page);     //获取指定页的数据
+};
+%>
+	<form action="CoreServlet?ac=searchTwo" name="f1" method="post">
+		<table width="99.8%" border="0" align="center" cellpadding="0" cellspacing="0">
+			<tr>
+				<td height="30"><table width="100%" border="0" cellspacing="0"
+						cellpadding="0">
+						<tr>
+							<td height="24" bgcolor="#353c44"><table width="100%" border="0"
+									cellspacing="0" cellpadding="0">
+									<tr>
+										<td><table width="100%" border="0" cellspacing="0"
+												cellpadding="0">
+												<tr>
+													<td width="3%" height="19" valign="bottom">&nbsp;&nbsp;&nbsp;</td>
+													<td width="97%" valign="bottom"><span class="STYLE1">
+															二手交易管理</span></td>
+												</tr>
+											</table></td>
+										<td></td>
+									</tr>
+								</table></td>
+						</tr>
+					</table></td>
+			</tr>
+			<tr>
+				<td><table width="100%" border="0" cellpadding="0" cellspacing="1"
+						class="mytab" onmouseover="changeto()" onmouseout="changeback()">
+						<tr>
+							<td colspan=10 height="30" align="left" bgcolor="#FFFFFF" class="STYLE19"><label></label>&nbsp;&nbsp;&nbsp;
+								&nbsp;&nbsp;物品标题 &nbsp;:&nbsp; <input type=text class='' size=15
+								name='title' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;发布人
+								&nbsp;:&nbsp; <input type=text class='' size=15 name='uname' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								&nbsp;&nbsp;&nbsp;<input type=submit class='' value='查询信息' />
+								&nbsp;&nbsp;<input type=button class='' value='添加信息' onclick="add();" />
+								&nbsp;&nbsp;</td>
+						</tr>
+						<tr bgcolor="#F3F8F7">
+							<td height="30" align="center"
+								style="background-color: #F3F8F7;color:#344B50;">物品标题</td>
+							<td height="30" align="center"
+								style="background-color: #F3F8F7;color:#344B50;">物品类别</td>
+							<td height="30" align="center"
+								style="background-color: #F3F8F7;color:#344B50;">联系人</td>
+							<td height="30" align="center"
+								style="background-color: #F3F8F7;color:#344B50;">联系电话</td>
+							<td height="30" align="center"
+								style="background-color: #F3F8F7;color:#344B50;">联系地址</td>
+							<td height="30" align="center"
+								style="background-color: #F3F8F7;color:#344B50;">联系QQ</td>
+							<td height="30" align="center"
+								style="background-color: #F3F8F7;color:#344B50;">价格</td>
+							<td height="30" align="center"
+								style="background-color: #F3F8F7;color:#344B50;">发布人</td>
+							<td height="30" align="center"
+								style="background-color: #F3F8F7;color:#344B50;">发布时间</td>
+							<td height="30" align="center"
+								style="background-color: #F3F8F7;color:#344B50;">操作</td>
+						</tr>
+						<%
+										for(int i=0;i<list.size();i++){
+										TwoHand twoh=(TwoHand)list.get(i);
+						%>
+						<tr>
+							<td height="30" align="center" bgcolor="#FFFFFF" class="STYLE19"><%=twoh.getTitle()%></td>
+							<td height="30" align="center" bgcolor="#FFFFFF" class="STYLE19"><%=twoh.getWptype()%></td>
+							<td height="30" align="center" bgcolor="#FFFFFF" class="STYLE19"><%=twoh.getLxr()%></td>
+							<td height="30" align="center" bgcolor="#FFFFFF" class="STYLE19"><%=twoh.getLxtel()%></td>
+							<td height="30" align="center" bgcolor="#FFFFFF" class="STYLE19"><%=twoh.getLxaddress()%></td>
+							<td height="30" align="center" bgcolor="#FFFFFF" class="STYLE19"><%=twoh.getLxqq()%></td>
+							<td height="30" align="center" bgcolor="#FFFFFF" class="STYLE19"><%=twoh.getPrice()%></td>
+							<td height="30" align="center" bgcolor="#FFFFFF" class="STYLE19"><%=twoh.getUname()%></td>
+							<td height="30" align="center" bgcolor="#FFFFFF" class="STYLE19"><%=twoh.getSavetime()%></td>
+							<td height="30" align="center" bgcolor="#FFFFFF" class="STYLE19"><a
+								href="javascript:update('<%=twoh.getId()%>')">修改</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a
+								onclick="return confirm('确定要删除这条记录吗?')"
+								href="/twoHands/CoreServlet?ac=twosc&id=<%=twoh.getId()%>">删除</a></td>
+						</tr>
+						<%
+							}
+						%>
+					</table></td>
+			</tr>
+			<tr>
+				<td height="30"><table width="100%" border="0" cellspacing="0"
+						cellpadding="0">
+						<tr>
+							<td colspan=10 align="center" class="STYLE19"><%=pageinfo.printCtrl(Page,(String)request.getAttribute("url")) %>
+							</td>
+						</tr>
+					</table></td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>
